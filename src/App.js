@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import 'react-date-range/dist/styles.css'; 
-import 'react-date-range/dist/theme/default.css'; 
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRangePicker } from 'react-date-range';
 import { format, parse } from 'date-fns';
+import VisitorPerDay from './components/VisitorPerDay';
+
 const App = () => {
-  const [data, setData] = useState([]); 
-  const [filteredData, setFilteredData] = useState([]); 
-  const [openDate, setOpenDate] = useState(true); 
+  const [data, setData] = useState([]); // Holds the original data
+  const [filteredData, setFilteredData] = useState([]); // Holds the filtered data
+  const [openDate, setOpenDate] = useState(true); // For showing date range picker
   const [dateRange, setDateRange] = useState({
-    startDate: new Date(), 
-    endDate: new Date(), 
+    startDate: new Date(), // Start date for range
+    endDate: new Date(), // End date for range
     key: 'selection',
   });
 
@@ -40,9 +42,9 @@ const App = () => {
     if (data.length > 0) {
       const filtered = data.filter(booking => {
         const bookingDate = new Date(
-          booking.arrival_date_year, 
-          getMonthIndex(booking.arrival_date_month), 
-          booking.arrival_date_day_of_month 
+          booking.arrival_date_year, // Year from the data
+          getMonthIndex(booking.arrival_date_month), // Convert month name to index
+          booking.arrival_date_day_of_month // Day from the data
         );
         
         return (
@@ -54,7 +56,6 @@ const App = () => {
     }
   }, [dateRange, data]);
 
-    
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-7xl mx-auto bg-white rounded-lg p-6">
@@ -69,6 +70,15 @@ const App = () => {
             ranges={[dateRange]}
             onChange={(ranges) => setDateRange(ranges.selection)} // Update date range on change
           />
+        )}
+
+        
+        {filteredData.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white p-4 rounded-lg shadow">
+              <VisitorPerDay data={filteredData} />
+            </div>
+          </div>
         )}
       </div>
     </div>
