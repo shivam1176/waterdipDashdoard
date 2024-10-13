@@ -1,25 +1,39 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
 
+// Helper function to get the date in milliseconds for x-axis
+const getDateInMillis = (year, month, day) => {
+  return new Date(year, new Date(Date.parse(month + " 1")).getMonth(), day).getTime();
+};
+
 const VisitorPerDay = ({ data }) => {
-  // Prepare the series data for the ApexChart
-  const formattedData = data.map(booking => {
+  // Group the bookings by date and sum the number of visitors
+  const visitorsByDate = data.reduce((acc, booking) => {
+    // Create a unique key for each date (year, month, day)
+    const dateKey = getDateInMillis(
+      booking.arrival_date_year,
+      booking.arrival_date_month,
+      booking.arrival_date_day_of_month
+    );
+
+    // Calculate total visitors for the current booking
     const totalVisitors = parseInt(booking.adults || 0, 10) + parseInt(booking.children || 0, 10) + parseInt(booking.babies || 0, 10);
-    
-    // Return null if no visitors for that day
-    if (!totalVisitors) {
-      return { x: new Date(booking.arrival_date_year, new Date(Date.parse(booking.arrival_date_month + " 1")).getMonth(), booking.arrival_date_day_of_month).getTime(), y: null };
+
+    // If the date already exists in the accumulator, sum the visitors
+    if (acc[dateKey]) {
+      acc[dateKey] += totalVisitors;
+    } else {
+      acc[dateKey] = totalVisitors;
     }
 
-    return {
-      x: new Date(
-        booking.arrival_date_year,
-        new Date(Date.parse(booking.arrival_date_month + " 1")).getMonth(),
-        booking.arrival_date_day_of_month
-      ).getTime(), // Get time in milliseconds for x-axis (datetime)
-      y: totalVisitors, // Total visitors (adults + children + babies)
-    };
-  });
+    return acc;
+  }, {});
+
+  // Convert the visitorsByDate object into an array of objects for ApexCharts
+  const formattedData = Object.keys(visitorsByDate).map(dateKey => ({
+    x: parseInt(dateKey, 10), // Convert dateKey (in milliseconds) back to integer
+    y: visitorsByDate[dateKey], // Total visitors for that date
+  }));
 
   // ApexChart options
   const chartOptions = {
@@ -87,7 +101,7 @@ const VisitorPerDay = ({ data }) => {
     stroke: {
       curve: 'smooth',
     },
-    // This prevents the weird lines by not connecting missing data points
+    // Prevent connecting null data points
     connectNullData: false,
   };
 

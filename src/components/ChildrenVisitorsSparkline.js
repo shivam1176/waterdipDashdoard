@@ -1,18 +1,45 @@
 import React, { useEffect } from 'react';
 import ApexCharts from 'apexcharts';
 
+// Helper function to get the date in milliseconds for grouping by date
+const getDateInMillis = (year, month, day) => {
+  return new Date(year, new Date(Date.parse(month + " 1")).getMonth(), day).getTime();
+};
+
 const ChildrenVisitorsSparkline = ({ data }) => {
 
   useEffect(() => {
-    // Process the data to get the total number of adults over time
-    const childrenData = data.map(booking => parseInt(booking.children, 10));
-    
-    // Calculate the total number of adults for the title
-    const totalchildren = childrenData.reduce((acc, value) => acc + value, 0);
+    // Group the data by date and sum the number of children for each day
+    const childrenByDate = data.reduce((acc, booking) => {
+      // Create a unique key for each date (year, month, day)
+      const dateKey = getDateInMillis(
+        booking.arrival_date_year,
+        booking.arrival_date_month,
+        booking.arrival_date_day_of_month
+      );
+
+      // Get the number of children for the current booking
+      const children = parseInt(booking.children || 0, 10);
+
+      // If the date already exists, add the children to the existing total
+      if (acc[dateKey]) {
+        acc[dateKey] += children;
+      } else {
+        acc[dateKey] = children;
+      }
+
+      return acc;
+    }, {});
+
+    // Convert the grouped data into an array for the chart
+    const childrenData = Object.values(childrenByDate); // Only care about the summed values for the chart
+
+    // Calculate the total number of children for the title
+    const totalChildren = childrenData.reduce((acc, value) => acc + value, 0);
 
     const options = {
       series: [{
-        data: childrenData // Data for adults
+        data: childrenData // Summed data for children per day
       }],
       chart: {
         type: 'area',
@@ -32,14 +59,14 @@ const ChildrenVisitorsSparkline = ({ data }) => {
       },
       colors: ['#0991e3'],
       title: {
-        text: `${totalchildren}`, // Display total number of adults
+        text: `${totalChildren}`, // Display total number of children
         offsetX: 0,
         style: {
           fontSize: '24px',
         }
       },
       subtitle: {
-        text: 'Total children',
+        text: 'Total Children',
         offsetX: 0,
         style: {
           fontSize: '14px',
