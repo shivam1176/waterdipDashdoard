@@ -4,7 +4,7 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRangePicker } from 'react-date-range';
 import { format, parse } from 'date-fns';
 import VisitorPerDay from './components/VisitorPerDay';
-
+import VisitorsPerCountryChart from './components/VisitorsPerCountryChart';
 const App = () => {
   const [data, setData] = useState([]); // Holds the original data
   const [filteredData, setFilteredData] = useState([]); // Holds the filtered data
@@ -78,6 +78,11 @@ const App = () => {
               <div className="bg-white p-4 rounded-lg shadow">
               <VisitorPerDay data={filteredData} />
             </div>
+
+            <div className="bg-white p-4 rounded-lg shadow">
+              <VisitorsPerCountryChart data={filteredData} />
+            </div>
+
           </div>
         )}
       </div>
