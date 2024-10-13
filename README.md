@@ -1,3 +1,96 @@
+# Dashboard Project - Requirement Analysis
+
+## Objective
+Create a dashboard with 4 charts that update dynamically based on a selected date range.
+
+## Dataset
+- **Total Records:** 1k records from a hotel booking dataset.
+- **Details Included:**
+  - Number of adults, children, babies.
+  - Country of origin.
+  - Arrival date (year, month, day).
+
+## Key Features
+
+### Date Range Selector
+- Users should be able to filter data based on the selected date range.
+
+### Charts
+- **Time Series Chart:** Total visitors (adults + children + babies) per day.
+- **Column Chart:** Number of visitors per country.
+- **Sparkline Chart 1:** Total number of adult visitors.
+- **Sparkline Chart 2:** Total number of children visitors.
+
+## Design
+
+### User Interface
+- **Single-page React App:**
+  - A date picker at the top to select a date range.
+  - Charts displayed below the date picker.
+  - Data dynamically updates based on the selected date range.
+
+## High-Level View
+
+### Components
+
+#### 1. **App**
+- The main component that holds the dashboard layout and all chart components.
+
+#### 2. **DateSelector**
+- A component that allows users to select a date range.
+
+#### 3. **TimeSeriesChart**
+- Component for the time series chart showing total visitors per day (adults, children, babies combined).
+  
+#### 4. **ColumnChart**
+- Component for the column chart displaying the number of visitors per country.
+
+#### 5. **SparklineChart**
+- Component for two sparkline charts:
+  - Sparkline for total adult visitors.
+  - Sparkline for total child visitors.
+
+### State Management
+- Use React’s `useState` and `useEffect` for managing:
+  - The selected date range.
+  - Chart data updates based on the selected range.
+
+### Data Fetching
+- **Data Filtering:**
+  - Use JavaScript array methods like `filter`, `map` to process the dataset based on the selected date range.
+  - Preprocess the dataset to calculate metrics like total visitors, visitors per country, etc.
+
+### Version Control
+- Use **Git** for version control.
+- Write **meaningful commit messages**, e.g.:
+  - `"Added date range filter functionality"`
+  - `"Implemented time series chart for visitor data"`
+
+## Low-Level Design
+
+### DateSelector Component
+- **Date Range Picker:** 
+  - Implement using a date range picker (e.g., `react-datepicker`).
+  - On date selection, filter the data and pass the selected range to child components.
+
+### Chart Components
+- **ApexCharts:**
+  - Use ApexCharts to implement the different chart types.
+  - Each chart should receive the filtered data as props and update dynamically based on the selected date range.
+  
+  #### Example Charts:
+  - **TimeSeriesChart**: Displays visitors per day.
+  - **ColumnChart**: Displays visitors by country.
+  - **SparklineChart1 & SparklineChart2**: Display adult and children visitors as sparkline graphs.
+
+---
+
+### Tech Stack
+- **Frontend:** React, ApexCharts, JavaScript, JSX.
+- **State Management:** React Hooks (`useState`, `useEffect`).
+- **Version Control:** Git.
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
