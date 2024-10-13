@@ -5,6 +5,8 @@ import { DateRangePicker } from 'react-date-range';
 import { format, parse } from 'date-fns';
 import VisitorPerDay from './components/VisitorPerDay';
 import VisitorsPerCountryChart from './components/VisitorsPerCountryChart';
+import AdultVisitorsSparkline from './components/AdultVisitorsSparkline';
+import ChildrenVisitorsSparkline from './components/ChildrenVisitorsSparkline';
 const App = () => {
   const [data, setData] = useState([]); // Holds the original data
   const [filteredData, setFilteredData] = useState([]); // Holds the filtered data
@@ -81,6 +83,12 @@ const App = () => {
 
             <div className="bg-white p-4 rounded-lg shadow">
               <VisitorsPerCountryChart data={filteredData} />
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow">
+              <AdultVisitorsSparkline type="adults" data={filteredData} />
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow">
+              <ChildrenVisitorsSparkline type="adults" data={filteredData} />
             </div>
 
           </div>
